@@ -1,9 +1,21 @@
-api_token = '08833c369fb7488b876951c83e24c427'
+import auth_tokens
+import requests
+import json
+
 api_url_base = 'https://www.bungie.net/Platform/'
 
-oauth_code = '97e9d1e8e8ae585cedfd376ce6ac9911' # temp oauth code for dev
-client_id = '34928'
-access_token = 'CPPaAhKGAgAgmnbGDs0wsDQGDg05Hi8woo4tXTNeeyCcgJOAD62nhODgAAAAZEhjJoUMBh5UBpuvQSwEcM3+ijUpzuzCI6peP032/zyfw+iq50CXceyCzEZXRN5Yq26pFvvk6KgcX6FHFPbIyfkpM9MGPauhJlFtgljRs3IBbhpD2O/dwX2eFAZcDUR8hL1bbJThEWRDaXltCsxKRure9qbHUH6bkw7o58KJIriemYRQaVpyLLrWAUogE1l7HY366n23/6+uQ0sKUJEB69JmL5aAqu3GBA7cwZo5sadEJYq0lqS5vaYX39tG19hJHYCw3dTSS4MwRC7a14AulfECykyPblQwuFZMO5+KAEI='
+api_key_headers = {'X-API-Key': auth_tokens.api_key}
 
-headers = {'X-API-Key': api_token, 'Authorization': 'Bearer {0}'.format(access_token)}
-post_data = {'code': oauth_code}
+def get_headers(user_oauth_code):
+    token_uri = 'https://www.bungie.net/platform/app/oauth/token/'
+    response = requests.post(token_uri,headers=api_key_headers, data={'grant_type': 'authorization_code', 'code': user_oauth_code, 'client_id': auth_tokens.client_id})
+    if response.status_code == 200:
+        response_object = json.loads(response.content.decode('utf-8'))
+        access_token = response_object['access_token']
+        return {'X-API-Key': auth_tokens.api_key, 'Authorization': 'Bearer {0}'.format(access_token)}
+
+# TODO: Figure out how to get refresh tokens to work. Don't seem to have enough info right now
+# def get_refresh_token(oauth_, refresh_token):
+#     refresh_uri = '{0}app/OAuth/token/'.format(api_url_base)
+#     response = requests.post(refresh_uri, headers=api_key_headers, data={'grant_type': 'refresh_token', 'refresh_token': refresh_token})
+#     return response
