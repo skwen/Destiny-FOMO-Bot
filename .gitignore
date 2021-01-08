@@ -1,0 +1,4 @@
+*.json
+*.pyc
+auth_tokens.py
+legacy_functions.py
