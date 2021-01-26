@@ -62,8 +62,7 @@ def get_item_definition(oauth_headers, hashidentifier):
         return None
     return None
 
-def banshee_has_new_mod(user_oauth_code, membership_id):
-    oauth_headers = api.get_headers(user_oauth_code)
+def banshee_has_new_mod(oauth_headers, membership_id):
     # get character info
     first_character_id = get_profile(oauth_headers, membership_id)
     # get items vendor is selling for that character
