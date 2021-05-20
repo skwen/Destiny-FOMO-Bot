@@ -50,12 +50,28 @@ def get_vendor(oauth_headers, membership_id, character_id, vendor_hash):
         print(response.content)
         return None
 
-def get_item_definition(oauth_headers, hashidentifier):
+def get_item_definition(hashidentifier):
     definition_uri = '{0}Destiny2/Manifest/DestinyInventoryItemDefinition/{1}/'.format(api.api_url_base, hashidentifier)
-    response = requests.get(definition_uri, headers=oauth_headers)
+    response = requests.get(definition_uri, headers=api.api_key_headers)
     if response.status_code == 200:
         response_object = json.loads(response.content.decode('utf-8'))
+        print(response.content.decode('utf-8'))
         return response_object
+    else:
+        print('Item Definition Error:')
+        print(response.content)
+        return None
+    return None
+
+def item_search(search_term):
+    search_uri = '{0}Destiny2/Armory/Search/DestinyInventoryItemDefinition/{1}/'.format(api.api_url_base, search_term)
+    response = requests.get(search_uri, headers=api.api_key_headers)
+    if response.status_code == 200:
+            response_object = json.loads(response.content.decode('utf-8'))
+            if len(response_object['Response']['results']['results']) == 0:
+                return None
+            else:
+                return Item(response_object['Response']['results']['results'][0]['hash'], response_object['Response']['results']['results'][0]['displayProperties']['name'])
     else:
         print('Item Definition Error:')
         print(response.content)
