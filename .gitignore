@@ -5,3 +5,4 @@ legacy_functions.py
 .vscode
 pyenv
 *.pyshelf
+config.ini
