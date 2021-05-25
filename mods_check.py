@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from item_info import Item
+from DestinyEnums import D2Vendors
 
 
 def banshee_has_new_mod(bungie_api, membership_id):
@@ -8,7 +9,7 @@ def banshee_has_new_mod(bungie_api, membership_id):
     first_character_id = bungie_api.get_profile(membership_id)
     # get items vendor is selling for that character
     banshee_vendor_info = bungie_api.get_vendor(
-        membership_id, first_character_id, "672118013"
+        membership_id, first_character_id, D2Vendors.Banshee.value
     )
     item_sales = banshee_vendor_info["Response"]["sales"]["data"]
     item_list = []
@@ -24,7 +25,6 @@ def banshee_has_new_mod(bungie_api, membership_id):
 
     # look up item info
     collections_info = bungie_api.get_collections(membership_id)
-    # print(collections_info)
 
     missing_mods = []
     for x in item_list:
@@ -33,9 +33,3 @@ def banshee_has_new_mod(bungie_api, membership_id):
             if collections_info[str_x]["state"] & 0x1 == 1:
                 missing_mods.append(x.name)
     return missing_mods
-
-
-# use to dump request info to a file to manually investigate if needed
-# vendor_file = open("vendorFile{0}.json".format(vendor_hash), "w")
-# vendor_file.write(json.dumps(response_object, indent=4, sort_keys=True))
-# vendor_file.close()

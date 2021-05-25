@@ -4,7 +4,7 @@ import datetime
 import requests
 
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Iterable, Set
 
 
 @dataclass
@@ -32,11 +32,32 @@ class BungieOauth:
         }
 
         self.token_file = f"{client_id}-oauth_tokens.pyshelf"
+        # bungie oauth is a 1 to many mapping d2 user accounts, user actions need the d2 accounts
+        # keep track of them separately
+        self.mapping_file = f"{client_id}-d2_to_oauth_mapping.pyshelf"
+
+    def filter_d2_memberships(self, memberships: Iterable[str]) -> Set[str]:
+        """
+        Filter out any memberships (ie returned by d2 search) that we don't have an oauth key for
+        """
+        recognised = set()
+        with shelve.open(self.mapping_file) as mapping:
+            for membership in memberships:
+                if membership in mapping:
+                    recognised.add(membership)
+        return recognised
 
     def get_token(self, membership_id) -> BungieOauthToken:
+        # Bungie's oauth is annoying, we might have an oauth user ID or a d2 user ID
+        # If we have a d2 user ID, replace it with the actual oauth user ID
+        with shelve.open(self.mapping_file) as mapping:
+            if membership_id in mapping:
+                membership_id = mapping[membership_id]
+
         with shelve.open(self.token_file) as db:
             if membership_id not in db:
                 raise Exception(f"{membership_id} not found, re-register user")
+
             token: BungieOauthToken = db[membership_id]
         if token.access_expires_at < datetime.datetime.utcnow():
             return self.renew_token(membership_id)
@@ -80,6 +101,21 @@ class BungieOauth:
 
         with shelve.open(self.token_file) as db:
             db[json_dict["membership_id"]] = token
+
+        search_uri = f"{self.api_root}/User/GetMembershipsForCurrentUser/"
+        r = requests.get(
+            search_uri, headers=self.get_oauth_headers(json_dict["membership_id"])
+        )
+        if not r.ok:
+            print(f"Failed to get all d2 memberships")
+            r.raise_for_status()
+
+        res = r.json()
+        with shelve.open(self.mapping_file) as db:
+            for membership in res["Response"]["destinyMemberships"]:
+                db[membership["membershipId"]] = res["Response"]["bungieNetUser"][
+                    "membershipId"
+                ]
 
         return token
 

@@ -17,3 +17,6 @@ class DamageType(Enum):
     Void = 4
     Raid = 5
     Stasis = 6
+
+class D2Vendors(Enum):
+    Banshee = 672118013

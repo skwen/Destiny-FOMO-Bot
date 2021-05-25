@@ -1,5 +1,5 @@
 import requests
-from typing import Dict
+from typing import Dict, Set, Iterable
 from bungie_oauth import BungieOauth
 from item_info import Item
 
@@ -15,8 +15,16 @@ class BungieApi:
         self.api_key_header = {"X-API-Key": self.api_key}
         self.oauth = BungieOauth(self.api_key, self.client_id, self.client_secret)
 
-    def search_account(self, name: str):
-        search_uri = f"{self.api_url_base}Destiny2/SearchDestinyPlayer/3/{name}/"
+    def add_oauth_user(self, oauth_code: str) -> None:
+        self.oauth.add_user(oauth_code)
+
+    def filter_unknown_memberships(self, memberships: Iterable[str]) -> Set[str]:
+        return self.oauth.filter_d2_memberships(memberships)
+
+    def search_accounts(self, name: str) -> Set[str]:
+        # https://bungie-net.github.io/multi/schema_BungieMembershipType.html#schema_BungieMembershipType
+        # Searching all platforms with -1
+        search_uri = f"{self.api_url_base}Destiny2/SearchDestinyPlayer/-1/{name}/"
         response = requests.get(search_uri, headers=self.api_key_header)
 
         if not response.ok:
@@ -24,7 +32,7 @@ class BungieApi:
             print(response.content)
             return None
         response_object = response.json()
-        return response_object["Response"][0]["membershipId"]
+        return {r["membershipId"] for r in response_object["Response"]}
 
     def get_profile(self, membership_id):
         components = "100"
