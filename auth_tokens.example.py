@@ -1,5 +1,6 @@
-
-api_key = 'api key from bungie'
-client_id = 'the oauth client id of your dev build'
-client_secret = 'the oauth client secret from bungie'
-discord_bot_token = 'Bot Token from discord. Note the bot needs to be added to the relevant servers.'
+api_key = "api key from bungie"
+client_id = "the oauth client id of your dev build"
+client_secret = "the oauth client secret from bungie"
+discord_bot_token = (
+    "Bot Token from discord. Note the bot needs to be added to the relevant servers."
+)
