@@ -5,7 +5,8 @@
 2. Install dependencies (`pip install -r requirements.txt`)
 
 ## Development use (Mod Checking locally):
-1. Create an application at https://www.bungie.net/en/Application to get an API key and client ID.
+1. Create an application at https://www.bungie.net/en/Application to get an API key, client ID, and client secret.
+    * Choose "Confidential" for the OAuth Client Type
 2. Set the redirect URL to https://127.0.0.1/
 3. Create auth_tokens.py and populate it with your values of "api_key", "client_id", and "client_secret" (use the example for help)
 4. Go to https://www.bungie.net/en/OAuth/Authorize?client_id={your_client_id}&response_type=code and log-in properly

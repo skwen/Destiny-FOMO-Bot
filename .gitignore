@@ -4,3 +4,4 @@ auth_tokens.py
 legacy_functions.py
 .vscode
 pyenv
+*.pyshelf
