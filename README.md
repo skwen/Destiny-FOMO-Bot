@@ -1,5 +1,9 @@
 # Destiny-FOMO-Bot
 
+## Development setup
+1. Create a Python virtualenv (`python3.8 -m venv pyenv`)
+2. Install dependencies (`pip install -r requirements.txt`)
+
 ## Development use (Mod Checking locally):
 1. Create an application at https://www.bungie.net/en/Application to get an API key and client ID.
 2. Set the redirect URL to https://127.0.0.1/
