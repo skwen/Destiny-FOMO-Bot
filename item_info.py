@@ -1,4 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Item:
-    def __init__(self, hash, name):
-        self.hash = str(hash)
-        self.name = name
+    hash: str
+    name: str
