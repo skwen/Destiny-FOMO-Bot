@@ -26,5 +26,9 @@ if __name__ == "__main__":
     memberships = api.search_accounts(username)
     print(f"Found {len(memberships)} users matching {username}")
     for membership_id in api.filter_unknown_memberships(memberships):
-        print("Banshee is selling the following mods you do not currently have:")
-        print(mods_check.banshee_has_new_mod(api, membership_id))
+        missing, all_items = mods_check.banshee_has_new_mod(api, membership_id)
+        all_mods = [i.name for i in all_items]
+        print("Ada-1 and Banshee-44 are selling the following mods:")
+        print(all_mods)
+        print("Of the above mods, you are currently missing:")
+        print(missing)
