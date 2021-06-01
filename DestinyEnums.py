@@ -1,10 +1,9 @@
 # See https://bungie-net.github.io/
 from enum import Enum
 
-# https://bungie-net.github.io/#/components/schemas/Destiny.DestinyAmmunitionType
-
 
 class DestinyAmmunitionType(Enum):
+    """https://bungie-net.github.io/#/components/schemas/Destiny.DestinyAmmunitionType"""
     NoType = 0
     Primary = 1
     Special = 2
@@ -12,8 +11,8 @@ class DestinyAmmunitionType(Enum):
     Unknown = 4
 
 
-# https://bungie-net.github.io/#/components/schemas/Destiny.DamageType
 class DamageType(Enum):
+    """https://bungie-net.github.io/#/components/schemas/Destiny.DamageType"""
     NoType = 0
     Kinetic = 1
     Arc = 2
@@ -24,13 +23,13 @@ class DamageType(Enum):
 
 
 class D2Vendors(Enum):
+    """Known Vendor IDs"""
     Ada = 350061650
     Banshee = 672118013
 
-# https://bungie-net.github.io/#/components/schemas/BungieMembershipType
-
 
 class BungieMembershipType(Enum):
+    """https://bungie-net.github.io/#/components/schemas/BungieMembershipType"""
     All = -1
     NoType = 0
     TigerXbox = 1
@@ -41,10 +40,9 @@ class BungieMembershipType(Enum):
     TigerDemon = 10
     BungieNext = 254
 
-# https://bungie-net.github.io/#/components/schemas/Destiny.DestinyComponentType
-
 
 class DestinyComponentType(Enum):
+    """https://bungie-net.github.io/#/components/schemas/Destiny.DestinyComponentType"""
     NoType = 0
     Profiles = 100
     VendorReceipts = 101
@@ -81,8 +79,9 @@ class DestinyComponentType(Enum):
     Metrics = 1100
     StringVariables = 1200
 
-# https://bungie-net.github.io/#/components/schemas/Destiny.DestinyItemType
+
 class DestinyItemType(Enum):
+    """https://bungie-net.github.io/#/components/schemas/Destiny.DestinyItemType"""
     NoType = 0
     Currency = 1
     Armor = 2
