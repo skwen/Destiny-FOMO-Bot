@@ -1,8 +1,12 @@
 # Destiny-FOMO-Bot
 
 ## Development setup
+### Local
 1. Create a Python virtualenv (`python3.8 -m venv pyenv`)
 2. Install dependencies (`pip install -r requirements.txt`)
+### VSCode Remote Dev-Container
+1. Install the **Remote - Containers** Extension (`ms-vscode-remote.remote-containers`). You may need to run Docker Desktop.
+2. In the command palette, run **Remote-Containers: Open Folder in Container...** and select the main repository folder.
 
 ## Development use (Mod Checking locally):
 1. Create an application at https://www.bungie.net/en/Application to get an API key, client ID, and client secret.
