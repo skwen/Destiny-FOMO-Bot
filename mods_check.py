@@ -11,7 +11,7 @@ def banshee_has_new_mod(bungie_api: BungieApi, membership: Membership) -> Tuple[
     # get character info
     first_character_id = bungie_api.get_profile(membership)
     # get items vendor is selling for that character
-    item_list = []
+    mod_list = []
     mod_vendors = [D2Vendors.Banshee, D2Vendors.Ada]
     for vendor in mod_vendors:
         vendor_info = bungie_api.get_vendor(
@@ -26,15 +26,15 @@ def banshee_has_new_mod(bungie_api: BungieApi, membership: Membership) -> Tuple[
                     item_response["Response"]["collectibleHash"],
                     item_response["Response"]["displayProperties"]["name"],
                 )
-                item_list.append(item)
+                mod_list.append(item)
 
     # look up item info
     collections_info = bungie_api.get_collections(membership)
 
     missing_mods = []
-    for x in item_list:
+    for x in mod_list:
         str_x = x.hash
         if str_x in collections_info.keys():
             if collections_info[str_x]["state"] & 0x1 == 1:
                 missing_mods.append(x.name)
-    return missing_mods, item_list
+    return missing_mods, mod_list
