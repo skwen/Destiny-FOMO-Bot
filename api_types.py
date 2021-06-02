@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True, eq=True)
-class Item:
-    hash: str
-    name: str
+class Membership:
+    displayName: str
+    id: str
+    type: int

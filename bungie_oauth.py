@@ -5,7 +5,7 @@ import requests
 
 from dataclasses import dataclass
 from typing import Dict, Iterable, Set
-
+from api_types import Membership
 
 @dataclass
 class BungieOauthToken:
@@ -36,18 +36,18 @@ class BungieOauth:
         # keep track of them separately
         self.mapping_file = f"{client_id}-d2_to_oauth_mapping.pyshelf"
 
-    def filter_d2_memberships(self, memberships: Iterable[str]) -> Set[str]:
+    def filter_d2_memberships(self, memberships: Iterable[Membership]) -> Set[Membership]:
         """
         Filter out any memberships (ie returned by d2 search) that we don't have an oauth key for
         """
         recognised = set()
         with shelve.open(self.mapping_file) as mapping:
             for membership in memberships:
-                if membership in mapping:
+                if membership.id in mapping:
                     recognised.add(membership)
         return recognised
 
-    def get_token(self, membership_id) -> BungieOauthToken:
+    def get_token(self, membership_id: str) -> BungieOauthToken:
         # Bungie's oauth is annoying, we might have an oauth user ID or a d2 user ID
         # If we have a d2 user ID, replace it with the actual oauth user ID
         with shelve.open(self.mapping_file) as mapping:

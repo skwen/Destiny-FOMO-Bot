@@ -1,8 +1,9 @@
 import requests
+from DestinyEnums import DestinyComponentType
 from typing import Dict, Set, Iterable
 from bungie_oauth import BungieOauth
 from item_info import Item
-
+from api_types import Membership
 
 class BungieApi:
     api_url_base = "https://www.bungie.net/Platform/"
@@ -18,10 +19,10 @@ class BungieApi:
     def add_oauth_user(self, oauth_code: str) -> None:
         self.oauth.add_user(oauth_code)
 
-    def filter_unknown_memberships(self, memberships: Iterable[str]) -> Set[str]:
+    def filter_unknown_memberships(self, memberships: Iterable[Membership]) -> Set[Membership]:
         return self.oauth.filter_d2_memberships(memberships)
 
-    def search_accounts(self, name: str) -> Set[str]:
+    def search_accounts(self, name: str) -> Set[Membership]:
         # https://bungie-net.github.io/multi/schema_BungieMembershipType.html#schema_BungieMembershipType
         # Searching all platforms with -1
         search_uri = f"{self.api_url_base}Destiny2/SearchDestinyPlayer/-1/{name}/"
@@ -32,42 +33,33 @@ class BungieApi:
             print(response.content)
             return None
         response_object = response.json()
-        return {r["membershipId"] for r in response_object["Response"]}
+        return {Membership(r["displayName"], r["membershipId"], r["membershipType"]) for r in response_object["Response"]}
 
-    def get_profile(self, membership_id):
-        components = "100"
-        uri = f"{self.api_url_base}Destiny2/3/Profile/{membership_id}/?components={components}"
+    def get_component(self, membership: Membership, component: DestinyComponentType):
+        uri = f"{self.api_url_base}Destiny2/{membership.type}/Profile/{membership.id}/?components={component.value}"
         response = requests.get(
-            uri, headers=self.oauth.get_oauth_headers(membership_id)
+            uri, headers=self.oauth.get_oauth_headers(membership.id)
         )
         if not response.ok:
-            print("Profile Error:")
+            print(f"{component.name} Error:")
             print(response.content)
             return None
-        response_object = response.json()
+        return response.json()
+
+    def get_profile(self, membership: Membership):
+        response_object = self.get_component(membership, DestinyComponentType.Profiles)
         return response_object["Response"]["profile"]["data"]["characterIds"][0]
 
-    def get_collections(self, membership_id):
-        components = "800"
-        uri = f"{self.api_url_base}Destiny2/3/Profile/{membership_id}/?components={components}"
-        response = requests.get(
-            uri, headers=self.oauth.get_oauth_headers(membership_id)
-        )
-        if not response.ok:
-            print("Collections error:")
-            print(response.content)
-            return None
-
-        response_object = response.json()
+    def get_collections(self, membership: Membership):
+        response_object = self.get_component(membership, DestinyComponentType.Collectibles)
         return response_object["Response"]["profileCollectibles"]["data"][
             "collectibles"
         ]
 
-    def get_vendor(self, membership_id, character_id, vendor_hash):
-        components = "402"
-        uri = f"{self.api_url_base}Destiny2/3/Profile/{membership_id}/Character/{character_id}/Vendors/{vendor_hash}/?components={components}"
+    def get_vendor(self, membership: Membership, character_id: str, vendor_hash: str):
+        uri = f"{self.api_url_base}Destiny2/{membership.type}/Profile/{membership.id}/Character/{character_id}/Vendors/{vendor_hash}/?components={DestinyComponentType.VendorSales.value}"
         response = requests.get(
-            uri, headers=self.oauth.get_oauth_headers(membership_id)
+            uri, headers=self.oauth.get_oauth_headers(membership.id)
         )
         if not response.ok:
             print("Vendor error:")
@@ -76,7 +68,7 @@ class BungieApi:
 
         return response.json()
 
-    def get_item_definition(self, hashidentifier):
+    def get_item_definition(self, hashidentifier: str):
         definition_uri = f"{self.api_url_base}Destiny2/Manifest/DestinyInventoryItemDefinition/{hashidentifier}/"
         response = requests.get(definition_uri, headers=self.api_key_header)
         if not response.ok:
@@ -86,7 +78,7 @@ class BungieApi:
 
         return response.json()
 
-    def item_search(self, search_term):
+    def item_search(self, search_term: str):
         search_uri = f"{self.api_url_base}Destiny2/Armory/Search/DestinyInventoryItemDefinition/{search_term}/"
         response = requests.get(search_uri, headers=self.api_key_header)
         if not response.ok:

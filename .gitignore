@@ -1,4 +1,5 @@
 *.json
+!.devcontainer/devcontainer.json
 *.pyc
 auth_tokens.py
 legacy_functions.py
