@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-import os
 import requests
-import configparser
+import secret_config
 
 if __name__ == "__main__":
     # Read secrets/variables from a file mount
-    CONFIG_PATH = os.getenv('CONFIG_PATH')
-    config = configparser.ConfigParser()
-    config.read(CONFIG_PATH)
+    config = secret_config.read()
     discord = config["discord"]
 
     BOT_TOKEN = discord['bot_token']
