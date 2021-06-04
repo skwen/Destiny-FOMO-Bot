@@ -18,7 +18,7 @@ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requ
    && rm -rf /tmp/pip-tmp
 
 # Point the code to load the local config.ini file
-ENV CONFIG_FILE config.ini
+ENV CONFIG_PATH config.ini
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
