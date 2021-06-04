@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import configparser
 import re
 
 from bungie_api import BungieApi
@@ -7,6 +6,7 @@ import discord
 import mods_check
 import DestinyEnums
 import reply_strings
+import secret_config
 
 
 class FomoBotClient(discord.Client):
@@ -65,8 +65,7 @@ class FomoBotClient(discord.Client):
 
 
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read("config.ini")
+    config = secret_config.read()
 
     pattern = re.compile(r"\[\[(.*)\]\]")
     client = FomoBotClient(pattern, bungie_api_config=config["bungie"])

@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-import configparser
-
 from bungie_api import BungieApi
+import secret_config
 import mods_check
 
-
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read("config.ini")
+    config = secret_config.read()
     api = BungieApi(config["bungie"])
 
     print("Sample item search:")
