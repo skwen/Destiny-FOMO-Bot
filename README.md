@@ -15,7 +15,7 @@
     * Check the following OAuth Scopes:
         * Read your Destiny 2 information (Vault, Inventory, and Vendors), as well as Destiny 1 Vault and Inventory data.
 2. Set the redirect URL to https://127.0.0.1/
-3. Modify config.ini and populate it with your values of "api_key", "client_id", and "client_secret"
+3. Create config.ini and populate it with your values of "api_key", "client_id", and "client_secret" (See sample-config.ini for a list of used configurations.)
 4. Run sample.py and follow the instructions to supply the oauth code.
 5. Enter the screen name of the account you are using to check the vendors.
 6. The script will check the today's inventory of Banshee-44 for mods not in collections.
@@ -23,7 +23,7 @@
 ## Development use (Discord Bot)
 1. Create an application at https://www.bungie.net/en/Application to get an API key and client ID.
 2. Set the redirect URL to https://127.0.0.1/
-3. Modify config.ini and populate it with your values of "api_key", "client_id", and "client_secret"
+3. Create config.ini and populate it with your values of "api_key", "client_id", and "client_secret" (See sample-config.ini for a list of used configurations.)
 4. Create a discord bot at https://discord.com/developers/applications
 5. Add the bot's token to config.ini
 6. Get a user authorization token if you want mod checking functionality (necessary for vendor checking and comparing inventory as far as I know)
